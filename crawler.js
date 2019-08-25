@@ -3,20 +3,38 @@ var cheerio = require('cheerio');
 var URL = require('url-parse');
 
 var indexs=[];
-var page = "https://nixos.org/nix/manual/";
-console.log(" page " + page);
+
+var MainPage ="https://nixos.org" //; "https://nixos.org/nix/manual/"
+var word = "--dump"
+console.log("The page: " + MainPage);
+console.log("The word: " + word);
+searchMain(MainPage)
+function searchMain(page) {
+
+var relativeLinks = [];
 request(page, function(error, response, body) {
    if(error) {
-     console.log("Error: " + error);
+     return("Error: " + error);
    }
-   console.log("Status code: " + response.statusCode);
+  // console.log("Status code: " + response.statusCode);
    if(response.statusCode === 200) {
-     var $ = cheerio.load(body);
-     console.log(searchWord($, "--dump"))
-   }
-});
 
-function searchWord($, word) {
+     var $ = cheerio.load(body);
+     $("a[href^='/']").each(function() {
+      relativeLinks.push($(this).attr('href'));
+ });
+     console.log("Search result on page "+page + " : ")
+     console.log(searchWord($, word,relativeLinks,page))
+    
+   }
+
+
+//console.log(relativeLinks) 
+});
+return indexs
+}
+
+function searchWord($, word,relativeLinks,page) {
   var bodyText = $('html > body').text();
   var bodyLower=bodyText.toLowerCase()
   var wordLower=word.toLowerCase()
@@ -25,11 +43,37 @@ function searchWord($, word) {
   if(bodyLower.indexOf(wordLower) !== -1) {
    while (bodyLower.indexOf(wordLower,start) !== -1){
    ind = bodyLower.indexOf(wordLower,start)
-   indexs.push(bodyText.substring(ind - 10, ind + 10)) 
+   indexs.push(bodyText.substring(ind - (word.length+10), ind + (word.length+10))) 
    start=ind+1
    
 }
     return indexs;
   }
-  return false;
+else{
+ 
+  if (relativeLinks.length>1){
+   console.log(word + " can't be found in the page "+page+". Searching for subpages");
+var ind =0
+ while(ind<relativeLinks.length){
+  if(relativeLinks[ind]!="/"){
+   searchMain(page+relativeLinks[ind])
+   ind=ind+1
 }
+else ind=ind+1
+}
+ // (relativeLinks.splice(1)).forEach(function(el){
+ //  searchMain(page+el)
+//})
+}
+else {
+  return (word + " can't be found in the page "+page)
+}
+}
+
+}
+
+console.log(indexs)
+
+
+
+
