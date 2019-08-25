@@ -35,6 +35,7 @@ return indexs
 }
 
 function searchWord($, word,relativeLinks,page) {
+  relativeLinks=relativeLinks.filter((v,i) => relativeLinks.indexOf(v) === i)
   var bodyText = $('html > body').text();
   var bodyLower=bodyText.toLowerCase()
   var wordLower=word.toLowerCase()
@@ -72,7 +73,6 @@ else {
 
 }
 
-console.log(indexs)
 
 
 
