@@ -1,0 +1,25 @@
+{
+  "name": "gebeya-crawler",
+  "version": "1.0.0",
+  "description": "A web crawler library ",
+  "main": "crawler.js",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "request": "^2.88.0",
+    "url-parse": "^1.4.7"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kidist-Abraham/Gcrawler.git"
+  },
+  "author": "Kidist-Abraham",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kidist-Abraham/Gcrawler/issues"
+  },
+  "homepage": "https://github.com/Kidist-Abraham/Gcrawler#readme"
+}
