@@ -1,6 +1,6 @@
 {
   "name": "gebeya-crawler",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A web crawler library ",
   "main": "crawler.js",
   "dependencies": {

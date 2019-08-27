@@ -2,16 +2,16 @@ var request = require('request');
 var cheerio = require('cheerio');
 var URL = require('url-parse');
 
-var indexs=[];
 
-var MainPage ="https://nixos.org" //; "https://nixos.org/nix/manual/"
-var word = "--dump"
-console.log("The page: " + MainPage);
-console.log("The word: " + word);
-searchMain(MainPage)
+
+//var MainPage ="https://nixos.org" //; "https://nixos.org/nix/manual/"
+//var word = "--dump"
+//console.log("The page: " + MainPage);
+//console.log("The word: " + word);
+//searchMain(MainPage,word)
 var $;
-function searchMain(page) {
-
+function searchMain(page,word) {
+  var indexs=[];
   var relativeLinks = [];
   request(page, function(error, response, body) {
     if(error) {
@@ -25,19 +25,18 @@ function searchMain(page) {
       $("a[href^='/']").each(function() {
         relativeLinks.push($(this).attr('href'));
       });
-      console.log("Search result on page "+page + " : ")
-      console.log(searchWord($, word,relativeLinks,page))
+     // console.log("Search result on page "+page + " : ")
+    searchWord($, word,relativeLinks,page,indexs)
 
     }
 
 
     //console.log(relativeLinks)
   });
- 
-  return indexs
+
 }
 
-function searchWord($, word,relativeLinks,page) {
+function searchWord($, word,relativeLinks,page,indexs) {
   relativeLinks=relativeLinks.filter((v,i) => relativeLinks.indexOf(v) === i)
   var bodyText = $('html > body').text();
   var bodyLower=bodyText.toLowerCase()
@@ -51,16 +50,16 @@ function searchWord($, word,relativeLinks,page) {
       start=ind+1
 
     }
-    return indexs;
+    console.log(indexs.length + " occurrences found on page "+page);
   }
   else{
 
     if (relativeLinks.length>1){
-      console.log(word + " can't be found in the page "+page+". Searching for subpages");
+    //  console.log(word + " can't be found in the page "+page+". Searching for subpages");
       var ind =0
       while(ind<relativeLinks.length){
         if(relativeLinks[ind]!="/"){
-          searchMain(page+relativeLinks[ind])
+          searchMain(page+relativeLinks[ind],word)
           ind=ind+1
         }
         else ind=ind+1
@@ -70,8 +69,11 @@ function searchWord($, word,relativeLinks,page) {
       //})
     }
     else {
-      return (word + " can't be found in the page "+page)
+     // console.log(word + " can't be found in the page "+page)
     }
   }
 
 }
+
+
+module.exports = searchMain;
