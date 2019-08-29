@@ -3,13 +3,8 @@ var cheerio = require('cheerio');
 var URL = require('url-parse');
 
 
-
-//var MainPage ="https://nixos.org" //; "https://nixos.org/nix/manual/"
-//var word = "--dump"
-//console.log("The page: " + MainPage);
-//console.log("The word: " + word);
-//searchMain(MainPage,word)
 var $;
+
 function searchMain(page,word) {
   var indexs=[];
   var relativeLinks = [];
@@ -17,21 +12,19 @@ function searchMain(page,word) {
     if(error) {
       return("Error: " + error);
     }
-    // console.log("Status code: " + response.statusCode);
+
     if(response.statusCode === 200) {
 
       $ = cheerio.load(body);
-    //  console.log(typeof($));
+
       $("a[href^='/']").each(function() {
         relativeLinks.push($(this).attr('href'));
       });
-     // console.log("Search result on page "+page + " : ")
+
     searchWord($, word,relativeLinks,page,indexs)
 
     }
 
-
-    //console.log(relativeLinks)
   });
 
 }
@@ -55,7 +48,7 @@ function searchWord($, word,relativeLinks,page,indexs) {
   else{
 
     if (relativeLinks.length>1){
-    //  console.log(word + " can't be found in the page "+page+". Searching for subpages");
+
       var ind =0
       while(ind<relativeLinks.length){
         if(relativeLinks[ind]!="/"){
@@ -64,12 +57,10 @@ function searchWord($, word,relativeLinks,page,indexs) {
         }
         else ind=ind+1
       }
-      // (relativeLinks.splice(1)).forEach(function(el){
-      //  searchMain(page+el)
-      //})
+
     }
     else {
-     // console.log(word + " can't be found in the page "+page)
+
     }
   }
 
